@@ -1,6 +1,7 @@
 package com.example.messageSource.config;
 
-import com.example.messageSource.model.ErrorResponse;
+import com.example.messageSource.exception.ValidationException;
+import com.example.messageSource.model.ErrorDetails;
 import com.example.messageSource.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -41,24 +42,34 @@ public class CommonUtils {
      * Adds Error Validations if found
      *
      * @param errorCode
-     *            of the GCSS Error
+     *            of the Error
      * @param errorMsg
-     *            of the GCSS Error
+     *            of the Error
      */
     public static void addOhmErrorToList(String errorCode, String errorMsg) {
 
-        if (CollectionUtils.isEmpty(getOhmValidationErrors())) {
-            List<ErrorResponse> errors = new ArrayList<>();
-            errors.add(OhmError.builder().errorCode(errorCode).errorMessage(errorMsg).build());
-            getHttpServletRequest().setAttribute(Constants.OHM_ERRORS, errors);
+        if (CollectionUtils.isEmpty(getValidationErrors())) {
+            List<ErrorDetails> errors = new ArrayList<>();
+            errors.add(ErrorDetails.builder().errorCode(errorCode).errorMessage(errorMsg).build());
+            getHttpServletRequest().setAttribute(Constants.ERRORS, errors);
         } else {
-            getOhmValidationErrors().add(OhmError.builder().errorCode(errorCode).errorMessage(errorMsg).build());
+            getValidationErrors().add(ErrorDetails.builder().errorCode(errorCode).errorMessage(errorMsg).build());
         }
     }
     /**
-     * @return List of Ohm Errors set in the Servlet Request
+     * @return List of Errors set in the Servlet Request
      */
-    public static List<OhmError> getOhmValidationErrors() {
-        return (List<OhmError>) getHttpServletRequest().getAttribute(Constants.OHM_ERRORS);
+    public static List<ErrorDetails> getValidationErrors() {
+        return (List<ErrorDetails>) getHttpServletRequest().getAttribute(Constants.ERRORS);
+    }
+
+    /**
+     * Throws Validations Exception if any Error is present in the Servelet ERRORS List
+     */
+    public static void validateErrors() {
+
+        if (Objects.nonNull(getValidationErrors())) {
+            throw new ValidationException(getValidationErrors());
+        }
     }
 }

@@ -2,10 +2,10 @@ package com.example.messageSource.controller;
 
 import com.example.messageSource.config.CommonUtils;
 import com.example.messageSource.config.MessageSourceUtils;
-import com.example.messageSource.model.ErrorResponse;
 import com.example.messageSource.model.SuccessResponse;
+import com.example.messageSource.service.Service;
 import com.example.messageSource.utils.Constants;
-import com.example.messageSource.validator.Validator;
+import com.example.messageSource.validator.Validator1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class Controller {
     @Autowired
-    private Validator validator;
+    private Service service;
     private final MessageSourceUtils messageSourceUtils;
 
     @PostMapping("/validateFirstScreen")
@@ -28,7 +28,7 @@ public class Controller {
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.MESSAGE_SOURCE, messageSourceUtils);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(validator.validation(flag));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.conditionalCheck(flag));
 
     }
 
@@ -39,7 +39,7 @@ public class Controller {
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.MESSAGE_SOURCE, messageSourceUtils);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(validator.validation(flag));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.conditionalCheck(flag));
 
     }
 }

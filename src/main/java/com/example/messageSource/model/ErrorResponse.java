@@ -1,14 +1,22 @@
 package com.example.messageSource.model;
 
+import com.example.messageSource.model.ErrorDetails;
 import lombok.*;
 
+import java.util.List;
+
+@Getter
+@Setter
 @Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ErrorResponse {
+public class ErrorResponse{
+    public List<ErrorDetails> multipleErrors;
 
-    private String errorCode;
+    public ErrorResponse(){
 
-    private String errorMessage;
+    }
+    public ErrorResponse(List<ErrorDetails> multipleErrors) {
+        this();
+        this.multipleErrors = multipleErrors;
+    }
+
 }
