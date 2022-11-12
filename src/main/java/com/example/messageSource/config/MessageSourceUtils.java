@@ -1,4 +1,4 @@
-package com.example.messageSource;
+package com.example.messageSource.config;
 
 import java.util.Locale;
 import java.util.Objects;

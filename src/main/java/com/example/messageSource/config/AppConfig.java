@@ -1,5 +1,6 @@
-package com.example.messageSource;
+package com.example.messageSource.config;
 
+import com.example.messageSource.utils.Constants;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

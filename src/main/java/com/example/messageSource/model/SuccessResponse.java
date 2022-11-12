@@ -1,4 +1,4 @@
-package com.example.messageSource;
+package com.example.messageSource.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VesselVoyageResponse {
+public class SuccessResponse {
 
-    private String errorCode;
-
-    private String errorMessage;
-
+    private String message;
 }

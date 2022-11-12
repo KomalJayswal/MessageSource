@@ -1,13 +1,17 @@
-package com.example.messageSource;
+package com.example.messageSource.controller;
 
+import com.example.messageSource.config.CommonUtils;
+import com.example.messageSource.config.MessageSourceUtils;
+import com.example.messageSource.model.ErrorResponse;
+import com.example.messageSource.model.SuccessResponse;
+import com.example.messageSource.utils.Constants;
+import com.example.messageSource.validator.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +22,7 @@ public class Controller {
     private final MessageSourceUtils messageSourceUtils;
 
     @PostMapping("/validateFirstScreen")
-    public ResponseEntity<VesselVoyageResponse> validateFirstScreen(@RequestHeader("flag") boolean flag) {
+    public ResponseEntity<SuccessResponse> validateFirstScreen(@RequestHeader("flag") boolean flag) {
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.FLAG, "Imports");
 
@@ -29,7 +33,7 @@ public class Controller {
     }
 
     @PostMapping("/validateSecondScreen")
-    public ResponseEntity<VesselVoyageResponse> validateSecondScreen(@RequestHeader("flag") boolean flag) {
+    public ResponseEntity<SuccessResponse> validateSecondScreen(@RequestHeader("flag") boolean flag) {
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.FLAG, "Adhoc");
 

@@ -8,11 +8,10 @@
 		<version>2.7.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>net.learninge</groupId>
 	<artifactId>messageSource</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>messageSource</name>
-	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
