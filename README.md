@@ -150,33 +150,16 @@ public class CommonUtils {
     private CommonUtils() {
         // No-OP
     }
-
-    /**
-     * Get current HttpServletRequest
-     *
-     * @return HttpServletRequest
-     */
+    
     public static HttpServletRequest getHttpServletRequest() {
         return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes()))
                 .getRequest();
     }
-
-    /**
-     * Get MessageSourceUtils from current Request Attribute
-     *
-     * @return MessageSourceUtils
-     */
+    
     public static MessageSourceUtils getMessageSourceUtils() {
         return ((MessageSourceUtils) getHttpServletRequest().getAttribute(Constants.MESSAGE_SOURCE));
     }
-    /**
-     * Adds Error Validations if found
-     *
-     * @param errorCode
-     *            of the Error
-     * @param errorMsg
-     *            of the Error
-     */
+
     public static void addOhmErrorToList(String errorCode, String errorMsg) {
 
         if (CollectionUtils.isEmpty(getValidationErrors())) {
@@ -187,16 +170,11 @@ public class CommonUtils {
             getValidationErrors().add(ErrorDetails.builder().errorCode(errorCode).errorMessage(errorMsg).build());
         }
     }
-    /**
-     * @return List of Errors set in the Servlet Request
-     */
+  
     public static List<ErrorDetails> getValidationErrors() {
         return (List<ErrorDetails>) getHttpServletRequest().getAttribute(Constants.ERRORS);
     }
-
-    /**
-     * Throws Validations Exception if any Error is present in the Servelet ERRORS List
-     */
+    
     public static void validateErrors() {
 
         if (Objects.nonNull(getValidationErrors())) {
@@ -429,6 +407,108 @@ b. <u>messages_adhoc.properties</u>
 * Add standard variable and method names
 * Segreated in standard packages
 
-### Read on
-* spring.main.allow-bean-definition-overriding
-* MessageSourceUtils
+### FAQs
+<details>
+    <summary><I>Explain Message Source ?</I></summary>
+
+</details>
+
+<details>
+    <summary><I>What is the need for spring.main.allow-bean-definition-overriding ?</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@PropertySource</I></summary>
+
+</details>
+
+<details>
+    <summary><I>Environment</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@Primary</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@Bean</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@RestControllerAdvice</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@Builder</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@Data</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@AllArgsConstructor</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@NoArgsConstructor</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@Autowired</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@Component</I></summary>
+
+</details>
+
+<details>
+    <summary><I>@ExceptionHandler</I></summary>
+
+</details>
+
+<details>
+    <summary><I>HttpServletRequest</I></summary>
+
+</details>
+
+<details>
+    <summary><I>RequestContextHolder</I></summary>
+
+</details>
+
+<details>
+    <summary><I>LoggerFactory</I></summary>
+
+</details>
+
+<details>
+    <summary><I>Logger</I></summary>
+
+</details>
+
+<details>
+    <summary><I>ServletRequestAttributes</I></summary>
+
+</details>
+
+<details>
+    <summary><I>ResponseEntity</I></summary>
+
+</details>
+
+<details>
+    <summary><I>ServletWebRequest</I></summary>
+
+</details>
