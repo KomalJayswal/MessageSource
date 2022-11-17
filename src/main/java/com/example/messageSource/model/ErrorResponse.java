@@ -1,8 +1,6 @@
 package com.example.messageSource.model;
 
-import com.example.messageSource.model.ErrorDetails;
 import lombok.*;
-
 import java.util.List;
 
 @Getter
@@ -18,5 +16,4 @@ public class ErrorResponse{
         this();
         this.multipleErrors = multipleErrors;
     }
-
 }

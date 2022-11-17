@@ -16,6 +16,32 @@ curl --location --request POST 'http://localhost:8080/validateFirstScreen' \
 --header 'Cookie: JSESSIONID=5465B0BB022F81E4DAAADA5599DD0589' \
 --data-raw ''
 ```
+<I>Success Response</I>
+```json
+{
+  "message": "SUCCESS"
+}
+```
+
+</details>
+
+<I>Error Response</I>
+```json
+{
+    "multipleErrors": [
+        {
+            "errorCode": "101",
+            "errorMessage": "First Screen Error Message for First Validation Check"
+        },
+        {
+            "errorCode": "102",
+            "errorMessage": "First Screen Error Message for Second Validation Check"
+        }
+    ]
+}
+```
+
+</details>
 
 ```
 curl --location --request POST 'http://localhost:8080/validateSecondScreen' \
@@ -96,18 +122,26 @@ public class MessageSourceUtils {
 public class Constants {
 
     public static final String MESSAGE_SOURCE = "MESSAGE_SOURCE";
+    public static final String ERRORS = "ERRORS";
     public static final String FLAG = "FLAG";
-    public static final String ERROR_CODE = "190001002";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String ERROR_CODE_1 = "101";
+    public static final String ERROR_CODE_2 = "102";
 }
 ```
 5. Create `CommonUtils` Java class under `config` package.
 ```java
-import net.learning.messageSource.utils.Constants;
+import com.example.messageSource.exception.ValidationException;
+import com.example.messageSource.model.ErrorDetails;
+import com.example.messageSource.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -135,11 +169,45 @@ public class CommonUtils {
     public static MessageSourceUtils getMessageSourceUtils() {
         return ((MessageSourceUtils) getHttpServletRequest().getAttribute(Constants.MESSAGE_SOURCE));
     }
+    /**
+     * Adds Error Validations if found
+     *
+     * @param errorCode
+     *            of the Error
+     * @param errorMsg
+     *            of the Error
+     */
+    public static void addOhmErrorToList(String errorCode, String errorMsg) {
+
+        if (CollectionUtils.isEmpty(getValidationErrors())) {
+            List<ErrorDetails> errors = new ArrayList<>();
+            errors.add(ErrorDetails.builder().errorCode(errorCode).errorMessage(errorMsg).build());
+            getHttpServletRequest().setAttribute(Constants.ERRORS, errors);
+        } else {
+            getValidationErrors().add(ErrorDetails.builder().errorCode(errorCode).errorMessage(errorMsg).build());
+        }
+    }
+    /**
+     * @return List of Errors set in the Servlet Request
+     */
+    public static List<ErrorDetails> getValidationErrors() {
+        return (List<ErrorDetails>) getHttpServletRequest().getAttribute(Constants.ERRORS);
+    }
+
+    /**
+     * Throws Validations Exception if any Error is present in the Servelet ERRORS List
+     */
+    public static void validateErrors() {
+
+        if (Objects.nonNull(getValidationErrors())) {
+            throw new ValidationException(getValidationErrors());
+        }
+    }
 }
 ```
 6. Create `AppConfig` Java Class, under `config` package,
 ```java
-import net.learning.messageSource.utils.Constants;
+import com.example.messageSource.utils.Constants;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -173,7 +241,40 @@ public class AppConfig {
     }
 }
 ```
-7. Create `model` package and under the package create `Response` Java Class
+7. Create `model` package and under the package create `ErrorDetails` Java Class
+```java
+import lombok.*;
+
+@Builder
+@Getter
+@Setter
+public class ErrorDetails {
+
+    private String errorCode;
+    private String errorMessage;
+}
+```
+8. Create `model` package and under the package create `ErrorResponse` Java Class
+```java
+import lombok.*;
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+public class ErrorResponse{
+    public List<ErrorDetails> multipleErrors;
+
+    public ErrorResponse(){
+
+    }
+    public ErrorResponse(List<ErrorDetails> multipleErrors) {
+        this();
+        this.multipleErrors = multipleErrors;
+    }
+}
+```
+9. Create `model` package and under the package create `SuccessResponse` Java Class
 ```java
 import lombok.*;
 
@@ -181,41 +282,91 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Response {
+public class SuccessResponse {
 
-    private String errorCode;
-
-    private String errorMessage;
+    private String message;
 }
 ```
-8. Create `validator` package and then create a `Validator` Java Class under it.
+10. Create `validator` package and then create a `Validator1` Java Class under it.
 ```java
-import net.learning.messageSource.config.CommonUtils;
-import net.learning.messageSource.model.Response;
-import net.learning.messageSource.utils.Constants;
+import com.example.messageSource.config.CommonUtils;
+import com.example.messageSource.utils.Constants;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Validator  {
+public class Validator1 {
 
-    public Response validation(boolean flag) {
+    public void validation(boolean flag) {
 
         if (flag) {
-            return Response.builder()
-                    .errorCode(Constants.ERROR_CODE)
-                    .errorMessage(CommonUtils.getMessageSourceUtils().getProperty(Constants.ERROR_CODE)).build();
+            CommonUtils.addOhmErrorToList(Constants.ERROR_CODE_1,
+                    CommonUtils.getMessageSourceUtils().getProperty(Constants.ERROR_CODE_1));
         }
-        return null;
     }
 }
 ```
-9. Create `controller` package. Under the package create `Controller` Java Class.
+11. Create `validator` package and then create a `Validator2` Java Class under it.
 ```java
-import net.learning.messageSource.config.CommonUtils;
-import net.learning.messageSource.config.MessageSourceUtils;
-import net.learning.messageSource.model.Response;
-import net.learning.messageSource.utils.Constants;
-import net.learning.messageSource.validator.Validator;
+import com.example.messageSource.config.CommonUtils;
+import com.example.messageSource.utils.Constants;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Validator2 {
+
+    public void validation(boolean flag) {
+
+        if (flag) {
+            CommonUtils.addOhmErrorToList(Constants.ERROR_CODE_2,
+                    CommonUtils.getMessageSourceUtils().getProperty(Constants.ERROR_CODE_2));
+        }
+    }
+}
+```
+12. Create `exception` package and then create a `ValidationException` Java Class under it.
+```java
+import com.example.messageSource.model.ErrorDetails;
+import lombok.Getter;
+
+import java.util.List;
+
+@Getter
+public class ValidationException extends RuntimeException {
+
+    public List<ErrorDetails> multipleErrors;
+    public ValidationException(List<ErrorDetails> errors) {
+        this.multipleErrors = errors;
+    }
+}
+```
+13. Create `exception` package and then create a `ErrorHandler` Java Class under it.
+```java
+import com.example.messageSource.model.ErrorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
+
+@RestControllerAdvice
+public class ErrorHandler{
+
+    @ExceptionHandler({ValidationException.class})
+    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException validationException,
+                                                                   ServletWebRequest servletWebRequest) {
+        ErrorResponse errorResponse =  new ErrorResponse(validationException.getMultipleErrors());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+}
+```
+14. Create `controller` package. Under the package create `Controller` Java Class.
+```java
+import com.example.messageSource.config.CommonUtils;
+import com.example.messageSource.config.MessageSourceUtils;
+import com.example.messageSource.model.SuccessResponse;
+import com.example.messageSource.service.Service;
+import com.example.messageSource.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -228,33 +379,38 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class Controller {
     @Autowired
-    private Validator validator;
+    private Service service;
     private final MessageSourceUtils messageSourceUtils;
 
     @PostMapping("/validateFirstScreen")
-    public ResponseEntity<Response> validateFirstScreen(@RequestHeader("flag") boolean flag) {
+    public ResponseEntity<SuccessResponse> validateFirstScreen(@RequestHeader("flag") boolean flag) {
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.FLAG, "Imports");
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.MESSAGE_SOURCE, messageSourceUtils);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(validator.validation(flag));
-
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.conditionalCheck(flag));
     }
 
     @PostMapping("/validateSecondScreen")
-    public ResponseEntity<Response> validateSecondScreen(@RequestHeader("flag") boolean flag) {
+    public ResponseEntity<SuccessResponse> validateSecondScreen(@RequestHeader("flag") boolean flag) {
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.FLAG, "Adhoc");
 
         CommonUtils.getHttpServletRequest().setAttribute(Constants.MESSAGE_SOURCE, messageSourceUtils);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(validator.validation(flag));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.conditionalCheck(flag));
 
     }
 }
 ```
-10. Create 2 property files. <br>
+15. Create `application.yml` to enable the overriding bean.
+```yaml
+server.port : 8080
+
+spring.main.allow-bean-definition-overriding : true
+```
+16. Create 2 property files. <br>
 a. <u>messages.properties</u>
 ```properties
 190001002=First Screen Error Message
@@ -263,8 +419,8 @@ b. <u>messages_adhoc.properties</u>
 ```properties
 190001002=Second Screen Error Message
 ```
-11. Run the application. 
-12. Open Postman in your system. Import the curl command provided above and hit the endpoints.
+17. Run the application. 
+18. Open Postman in your system. Import the curl command provided above and hit the endpoints.
 
 ### Improvements
 
