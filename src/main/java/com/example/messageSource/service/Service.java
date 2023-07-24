@@ -1,10 +1,8 @@
 package com.example.messageSource.service;
 
-import com.example.messageSource.config.CommonUtils;
-import com.example.messageSource.model.SuccessResponse;
 import com.example.messageSource.utils.Constants;
-import com.example.messageSource.validator.Validator1;
-import com.example.messageSource.validator.Validator2;
+import com.example.messageSource.validator.MandatoryDataValidator;
+import com.example.messageSource.validator.TicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,18 +10,16 @@ import org.springframework.stereotype.Component;
 public class Service {
 
     @Autowired
-    private Validator1 validator1;
+    private MandatoryDataValidator mandatoryDataValidator;
 
     @Autowired
-    private Validator2 validator2;
+    private TicketValidator ticketValidator;
 
-    public SuccessResponse conditionalCheck(boolean flag){
+    public String conditionalCheck(String ticketNumber){
 
-        validator1.validation(flag);
-        validator2.validation(flag);
+        mandatoryDataValidator.validation(ticketNumber);
+        ticketValidator.validation(ticketNumber);
 
-        CommonUtils.validateErrors();
-
-        return SuccessResponse.builder().message(Constants.SUCCESS).build();
+        return Constants.SUCCESS;
     }
 }

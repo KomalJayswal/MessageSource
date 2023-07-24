@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource("classpath:messages_adhoc.properties")
+@PropertySource("classpath:messages_bus.properties")
 public class AppConfig {
 
     @Bean
@@ -18,8 +18,8 @@ public class AppConfig {
         return new MessageSourceUtils(messageSource){
             @Override
             public String getProperty(String key, Object... args) {
-                String isAdhocFlow = CommonUtils.getHttpServletRequest().getAttribute(Constants.FLAG).toString();
-                if(isAdhocFlow.equals("Adhoc")){
+                String isBusTicket = CommonUtils.getHttpServletRequest().getAttribute(Constants.FLAG).toString();
+                if(isBusTicket.equals(Constants.BUS)){
                     String message = environment.getProperty(key);
                     if(null != message && !message.isEmpty()){
                         for(int i=0;i < args.length ; i++){

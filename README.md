@@ -194,7 +194,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource("classpath:messages_adhoc.properties")
+@PropertySource("classpath:messages_bus.properties")
 public class AppConfig {
 
     @Bean
@@ -266,6 +266,7 @@ public class SuccessResponse {
 }
 ```
 10. Create `validator` package and then create a `Validator1` Java Class under it.
+
 ```java
 import com.example.messageSource.config.CommonUtils;
 import com.example.messageSource.utils.Constants;
@@ -277,13 +278,14 @@ public class Validator1 {
     public void validation(boolean flag) {
 
         if (flag) {
-            CommonUtils.addOhmErrorToList(Constants.ERROR_CODE_1,
+            CommonUtils.addErrorToList(Constants.ERROR_CODE_1,
                     CommonUtils.getMessageSourceUtils().getProperty(Constants.ERROR_CODE_1));
         }
     }
 }
 ```
 11. Create `validator` package and then create a `Validator2` Java Class under it.
+
 ```java
 import com.example.messageSource.config.CommonUtils;
 import com.example.messageSource.utils.Constants;
@@ -295,7 +297,7 @@ public class Validator2 {
     public void validation(boolean flag) {
 
         if (flag) {
-            CommonUtils.addOhmErrorToList(Constants.ERROR_CODE_2,
+            CommonUtils.addErrorToList(Constants.ERROR_CODE_2,
                     CommonUtils.getMessageSourceUtils().getProperty(Constants.ERROR_CODE_2));
         }
     }
@@ -339,10 +341,10 @@ public class ErrorHandler{
 }
 ```
 14. Create `controller` package. Under the package create `Controller` Java Class.
+
 ```java
 import com.example.messageSource.config.CommonUtils;
 import com.example.messageSource.config.MessageSourceUtils;
-import com.example.messageSource.model.SuccessResponse;
 import com.example.messageSource.service.Service;
 import com.example.messageSource.utils.Constants;
 import lombok.RequiredArgsConstructor;

@@ -8,4 +8,6 @@ public class Constants {
     public static final String SUCCESS = "SUCCESS";
     public static final String ERROR_CODE_1 = "101";
     public static final String ERROR_CODE_2 = "102";
+    public static final String BUS = "BUS";
+    public static final String RAILWAY = "RAILWAY";
 }

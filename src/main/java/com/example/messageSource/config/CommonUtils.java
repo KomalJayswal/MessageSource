@@ -46,7 +46,7 @@ public class CommonUtils {
      * @param errorMsg
      *            of the Error
      */
-    public static void addOhmErrorToList(String errorCode, String errorMsg) {
+    public static void addErrorToList(String errorCode, String errorMsg) {
 
         if (CollectionUtils.isEmpty(getValidationErrors())) {
             List<ErrorDetails> errors = new ArrayList<>();
@@ -66,10 +66,10 @@ public class CommonUtils {
     /**
      * Throws Validations Exception if any Error is present in the Servelet ERRORS List
      */
-    public static void validateErrors() {
-
-        if (Objects.nonNull(getValidationErrors())) {
-            throw new ValidationException(getValidationErrors());
-        }
-    }
+//    public static void validateErrors() {
+//
+//        if (Objects.nonNull(getValidationErrors())) {
+//            throw new ValidationException(getValidationErrors());
+//        }
+//    }
 }
