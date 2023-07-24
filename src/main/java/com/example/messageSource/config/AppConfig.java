@@ -18,7 +18,7 @@ public class AppConfig {
         return new MessageSourceUtils(messageSource){
             @Override
             public String getProperty(String key, Object... args) {
-                String isBusTicket = CommonUtils.getHttpServletRequest().getAttribute(Constants.FLAG).toString();
+                String isBusTicket = CommonUtils.getHttpServletRequest().getAttribute(Constants.TRANSPORTATION_MODE).toString();
                 if(isBusTicket.equals(Constants.BUS)){
                     String message = environment.getProperty(key);
                     if(null != message && !message.isEmpty()){

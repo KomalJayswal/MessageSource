@@ -11,7 +11,7 @@ public class TicketValidator {
 
     public void validation(String ticketNumber) {
 
-        if (ticketNumber.length()<9) {
+        if (ticketNumber.length()>9) {
             throw new ValidationException(ErrorDetails.builder()
                     .errorCode(Constants.ERROR_CODE_2)
                     .errorMessage(CommonUtils.getMessageSourceUtils().getProperty(Constants.ERROR_CODE_2))
