@@ -13,7 +13,7 @@ public class ErrorHandler{
     @ExceptionHandler({ValidationException.class})
     public ResponseEntity<ErrorResponse> handleValidationException(ValidationException validationException,
                                                                    ServletWebRequest servletWebRequest) {
-        ErrorResponse errorResponse =  new ErrorResponse(validationException.getError());
+        ErrorResponse errorResponse =  new ErrorResponse(validationException.getMultipleErrors());
 
        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }

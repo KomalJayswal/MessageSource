@@ -8,5 +8,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse{
-    public ErrorDetails errors;
+    public List<ErrorDetails> errors;
 }

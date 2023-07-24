@@ -1,5 +1,6 @@
 package com.example.messageSource.service;
 
+import com.example.messageSource.config.CommonUtils;
 import com.example.messageSource.utils.Constants;
 import com.example.messageSource.validator.MandatoryDataValidator;
 import com.example.messageSource.validator.TicketValidator;
@@ -19,7 +20,7 @@ public class Service {
 
         mandatoryDataValidator.validation(ticketNumber);
         ticketValidator.validation(ticketNumber);
-
+        CommonUtils.validateErrors();
         return Constants.SUCCESS+ticketNumber;
     }
 }
