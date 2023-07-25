@@ -4,7 +4,7 @@
 
 ### Problem Statement
 
-Create a microservice to throw a excption from properties file 
+Create a microservice to throw a exception from properties file 
 as per the different endpoint called.
 
 ### Curl Commands to Validate Bus Ticket Number
@@ -45,7 +45,7 @@ Ticket Number Validation Successful : ABC345
 ```
 </details>
 
-### Curl Commands to Validate Bus Ticket Number
+### Curl Commands to Validate Railway Ticket Number
 
 ```
 curl --location --request POST 'http://localhost:8080/validateRailwayTicket' \
